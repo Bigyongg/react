@@ -15,9 +15,35 @@ class LoginForm extends Component {
   handleSubmit = (event)=>{
     //阻止事件的默认行为
     event.preventDefault()
-    //读取输入输入数据
-     const values =  this.props.form.getFieldsValue()
-   console.log(values)
+    //进行表单验证
+    const {form} = this.props
+    form.validateFields((err,values)=>{
+      if (!err){
+        //读取输入输入数据,values包含所有输入数据的对象
+        const values =  this.props.form.getFieldsValue()
+        console.log('发送登录ajax请求参数',values)
+
+        //提交后自动清空输入
+        this.props.form.resetFields()
+      }else {
+        //表单验证不通过
+      }
+    })
+
+
+
+  }
+  //自定义检验密码,如果传值，则失败，输出括号里面的内容
+  validatePwd =(rule, value, callback)=>{
+    value = value.trim()
+    if (value===''){
+      callback('密码必须输入')
+    } else if (value.length<4 && value.length>8) {
+      callback('密码长度必须为4-8位')
+    }else {
+      callback()
+    }
+
   }
   render() {
     //getFieldDecorator用来包装表单项组件标签，生成新的组件标签
@@ -26,21 +52,42 @@ class LoginForm extends Component {
       <Form className='login-form' onSubmit={this.handleSubmit}>
         <FormItem>
           {
-            getFieldDecorator('username')(
+            getFieldDecorator('username',{//配置对象：属性名是特定的名称
+              initialValue: 'admin',//页面刷新上来为空字符串
+              rules: [
+                { whitespace:true , required: true, message: '必须输入用户名' },
+                { min: 4, message: '用户名长度不能小于4' }
+
+
+              ],
+            })(
               <Input type='text' prefix={<Icon type="user" style={{ color: 'rgba(0,0,0,.25)' }} />} placeholder="请输入用户名" />)
           }
 
         </FormItem>
         <FormItem>
           {
-            getFieldDecorator('password')(
+            /*
+            * 密码必须输入，，且长度为4-8位
+            *function(value) => transformedValue:any
+            * */
+            getFieldDecorator('password',{
+             // 密码上来时候为空字符串
+              initialValue: '',
+              rules: [
+                { validator:this.validatePwd },
+
+
+
+              ],
+            })(
               <Input type='password' prefix={<Icon type="lock" style={{ color: 'rgba(0,0,0,.25)' }} />} placeholder="请输入密码" />
             )
           }
 
         </FormItem>
         <FormItem>
-        <Button type='primary' className='login-form-button' htmlType='submit'>登录</Button>
+        <Button type='primary' className='login-form-button' htmlType='submit'>登录2</Button>
         </FormItem>
       </Form>
     )
