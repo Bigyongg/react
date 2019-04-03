@@ -1,4 +1,5 @@
 import React, {Component} from 'react'
+import PropTypes from 'prop-types'
 import {Button, Form, Icon, Input} from "antd";
 import login from "./login";
 const FormItem = Form.Item
@@ -11,6 +12,10 @@ const FormItem = Form.Item
 * */
 
 class LoginForm extends Component {
+  //声明组件接受属性的属性名，属性值的类型一级级属性的必要性
+  static propTypes ={
+    login: PropTypes.func.isRequired
+  }
   //添加提交表单的监听回调事件
   handleSubmit = (event)=>{
     //阻止事件的默认行为
@@ -21,7 +26,8 @@ class LoginForm extends Component {
       if (!err){
         //读取输入输入数据,values包含所有输入数据的对象
         const values =  this.props.form.getFieldsValue()
-        console.log('发送登录ajax请求参数',values)
+        //console.log('发送登录ajax请求参数',values)
+        this.props.login(values)
 
         //提交后自动清空输入
         this.props.form.resetFields()
@@ -38,7 +44,7 @@ class LoginForm extends Component {
     value = value.trim()
     if (value===''){
       callback('密码必须输入')
-    } else if (value.length<4 && value.length>8) {
+    } else if (value.length<4 || value.length>8) {
       callback('密码长度必须为4-8位')
     }else {
       callback()
@@ -57,8 +63,6 @@ class LoginForm extends Component {
               rules: [
                 { whitespace:true , required: true, message: '必须输入用户名' },
                 { min: 4, message: '用户名长度不能小于4' }
-
-
               ],
             })(
               <Input type='text' prefix={<Icon type="user" style={{ color: 'rgba(0,0,0,.25)' }} />} placeholder="请输入用户名" />)
@@ -73,12 +77,9 @@ class LoginForm extends Component {
             * */
             getFieldDecorator('password',{
              // 密码上来时候为空字符串
-              initialValue: '',
+              initialValue:'',
               rules: [
-                { validator:this.validatePwd },
-
-
-
+                { validator:this.validatePwd }
               ],
             })(
               <Input type='password' prefix={<Icon type="lock" style={{ color: 'rgba(0,0,0,.25)' }} />} placeholder="请输入密码" />
@@ -87,7 +88,7 @@ class LoginForm extends Component {
 
         </FormItem>
         <FormItem>
-        <Button type='primary' className='login-form-button' htmlType='submit'>登录2</Button>
+        <Button type='primary' className='login-form-button' htmlType='submit'>登录6</Button>
         </FormItem>
       </Form>
     )
