@@ -1,109 +1,48 @@
-/*
-* 发送ajax请求的函数。
-*封装axios+promise
-*函数的返回值是promise对象  后面配合  async await
-*3.内部处理好统一处理异常，
-* 4.自己使用promise
-* 外部不使用try catch
-* 解决办法:在 axios外面包一层promise
-* 4.1异步返回响应数据。外部的调用异步得到的直接就是数据了
+/*用来发送ajax请求的模块
 *
+* 封装ajax
+* 函数的返回值是promise对象
 * */
-import  axios from 'axios'
+import axios from 'axios'
 import {message} from 'antd'
 
+export default function ajax(url,data={},type='GET') {
 
-export  default  function  ajax(url, data={},type="GET") {//形参默认值
-return new Promise((resolve,reject)=>{
-//执行异步ajax请求
-  let promise
-  if(type==='GET'){
-    promise = axios.get(url,{//配置对象
-      //指定包含所有query参数的数据对象
-      params:data
+  return new Promise((resolve,reject)=>{
+    //执行异步ajax请求
+    let promise
+    if (type==='GET'){
+      promise = axios.get(url,{ //配置对象
+        params:data
+      })
+    } else {
+      promise = axios.post(url,data)
+    }
 
-    })
-  }else {
-    promise = axios.post(url,data)
-  }
+    promise.then(response =>{
+      //请求成功，调用resolve()并且传递数据
+      resolve(response.data)
 
 
+    }).catch(error =>{
+      message.error('请求异常' + error.message)
+    } )
 
-  promise.then(response =>{
-    resolve(response.data)
-    //请求成功调用resolve
 
-  }).catch(error =>{
-    //不能调用reject()
-    message.error('请求异常:' +error.message)
+    //请求失败，不调用reject()，消失请求错误的对象
 
   })
 
 
+}
+ async function login() {
+  // const response = await ajax('./login',{username:'Tom',password:'123'})
+  //  const result = response.data
+   const result = await ajax('./login',{username:'Tom',password:'123'})
+   if (result.status===0){//成功了
 
-//请求失败，不调用reject，显示错误请求代码
+   } else {//失败了
 
-
-})
-
+   }
 
 }
-async function login() {
-  const response = await ajax('/login', {username: 'tom', password: '123'}, 'POST')
-  //data里面保存着响应数据
-  const result = response.data
-  if (result === 0) {//成功的代码
-
-  }
-
-}
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-

@@ -2,7 +2,8 @@ import React, {Component} from 'react'
 import LoginForm from './login-form'
 import logo from './images/logo.png'
 import './index.less'
-import {reqLogin} from '../../api'//引入接口请求函数里面的登录请求函数,统一暴露
+
+import {reqLogin} from '../../api'
 
 
 export default class Login extends Component {
@@ -11,8 +12,19 @@ export default class Login extends Component {
   }
   //请求登录的函数
   login = async ({username,password})=>{
-    // alert(`发送ajax请求: username=${username},password=${password}`)
+    //alert(`发送ajax请求: username=${username},password=${password}`)
     const result = await reqLogin(username,password)
+     console.log('result',result)
+    if (result.status===0) {//成功了
+      this.props.history.replace('/')
+    }else {
+      //显示错误信息
+      this.setState({
+        erroMsg: result.msg
+      })
+    }
+
+
   }
   render() {
 
