@@ -14,19 +14,20 @@ export default class Login extends Component {
   login = async ({username,password})=>{
     //alert(`发送ajax请求: username=${username},password=${password}`)
     const result = await reqLogin(username,password)
-     console.log('result',result)
+     //console.log('result',result)
     if (result.status===0) {//成功了
       this.props.history.replace('/')
     }else {
       //显示错误信息
       this.setState({
-        erroMsg: result.msg
+        errorMsg: result.msg
       })
     }
 
 
   }
   render() {
+    const {errorMsg} = this.state
 
     return (
       <div className='login'>
@@ -36,7 +37,9 @@ export default class Login extends Component {
         </div>
         <div className='login-content'>
           <div className='login-box'>
-          <div className='error-msg-wrap'> </div>
+          <div className='error-msg-wrap'>
+            <div className= {errorMsg ? 'show' : ''}>{errorMsg}</div>
+          </div>
           <div className='title'>用户登录</div>
           <LoginForm login={this.login}/>
           </div>

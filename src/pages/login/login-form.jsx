@@ -31,6 +31,7 @@ class LoginForm extends Component {
 
         //提交后自动清空输入
         this.props.form.resetFields()
+        console.log('handleSubmit()')
       }else {
         //表单验证不通过
       }
