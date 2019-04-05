@@ -2,6 +2,7 @@ import React, {Component} from 'react'
 import LoginForm from './login-form'
 import logo from './images/logo.png'
 import './index.less'
+import {reqLogin} from '../../api'//引入接口请求函数里面的登录请求函数,统一暴露
 
 
 export default class Login extends Component {
@@ -9,8 +10,9 @@ export default class Login extends Component {
     erroMsg:'',  //需要显示请求登录失败的提示文本
   }
   //请求登录的函数
-  login = ({username,password})=>{
-    alert(`发送ajax请求: username=${username},password=${password}`)
+  login = async ({username,password})=>{
+    // alert(`发送ajax请求: username=${username},password=${password}`)
+    const result = await reqLogin(username,password)
   }
   render() {
 
