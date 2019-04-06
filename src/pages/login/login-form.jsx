@@ -89,7 +89,7 @@ class LoginForm extends Component {
 
         </FormItem>
         <FormItem>
-        <Button type='primary' className='login-form-button' htmlType='submit'>登录6</Button>
+        <Button type='primary' className='login-form-button' htmlType='submit'>登录</Button>
         </FormItem>
       </Form>
     )

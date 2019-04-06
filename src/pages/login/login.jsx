@@ -2,13 +2,17 @@ import React, {Component} from 'react'
 import LoginForm from './login-form'
 import logo from './images/logo.png'
 import './index.less'
+import {Redirect} from 'react-router-dom'
 
 import {reqLogin} from '../../api'
+import storageUtil from '../../util/storageUtil'
+import MemoryUtils from '../../util/MemoryUtils'
+
 
 
 export default class Login extends Component {
   state  = {
-    erroMsg:'',  //需要显示请求登录失败的提示文本
+    errorMsg:'',  //需要显示请求登录失败的提示文本
   }
   //请求登录的函数
   login = async ({username,password})=>{
@@ -16,7 +20,15 @@ export default class Login extends Component {
     const result = await reqLogin(username,password)
      //console.log('result',result)
     if (result.status===0) {//成功了
-      this.props.history.replace('/')
+      const user = result.data
+      //保存到user到 local storage
+      storageUtil.saveUser(user)
+      //保存user到内存中
+      MemoryUtils.user = user
+
+
+
+      this.props.history.replace('/')//跳转到后台
     }else {
       //显示错误信息
       this.setState({
@@ -27,7 +39,13 @@ export default class Login extends Component {
 
   }
   render() {
+    //如果用户已经登录，自动跳转到admin
+    if (MemoryUtils.user && MemoryUtils.user._id){
+      return <Redirect to='/'/>
+    }
     const {errorMsg} = this.state
+
+
 
     return (
       <div className='login'>
@@ -38,7 +56,7 @@ export default class Login extends Component {
         <div className='login-content'>
           <div className='login-box'>
           <div className='error-msg-wrap'>
-            <div className= {errorMsg ? 'show' : ''}>{errorMsg}</div>
+            <div className= {errorMsg ?'show' : ''}>{errorMsg}</div>
           </div>
           <div className='title'>用户登录</div>
           <LoginForm login={this.login}/>
