@@ -18,13 +18,17 @@ export const reqLogin = (username,password)=> ajax(BASE+'./login',{username,pass
 *服务器端：处理强求，返回的是函数调用的js语句，(参数就是要返回的数据)
 * 浏览器端接收到相应后自定执行js代码，调用前面准备好的回调函数
 * */
-export  const  getWeather  = (city)=>{return new Promise((resolve,reject)=>{
- const url =`http://api.map.baidu.com/telematics/v3/weather?location=${city}&output=json&ak=3p49MVra6urFRGOT9s8UBWr2`
+export  const  getWeather  = (city)=>{
+
+  return new Promise((resolve,reject)=>{
+  const url =`http://api.map.baidu.com/telematics/v3/weather?location=${city}&output=json&ak=3p49MVra6urFRGOT9s8UBWr2`
    jsonp(url,{},(err,data)=>{
     if (!err && data.status==='success'){
-     const {dayPictureUrl,weather} = data.result[0].weather_data[0]
+     const {dayPictureUrl,weather} = data.results[0].weather_data[0]
+      //成功了调用resolve(),并且指定数据
+      resolve({dayPictureUrl,weather})
     }else {
-     alert('666')
+     alert('获取天气数据失败')
     }
    })
 })
