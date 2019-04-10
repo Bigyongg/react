@@ -34,7 +34,7 @@ class LeftNav extends Component {
       }else {//item有childern 才调用递归
         //确定openKey的值,并保存到组件对象
         const path =this.props.location.pathname
-        const cItem = item.children.find(cItem =>cItem.key===path)
+        const cItem = item.children.find(cItem => path.indexOf(cItem.key)===0)
         if (cItem) {
           const openKey =  item.key
           this.openKey = openKey
@@ -154,8 +154,12 @@ class LeftNav extends Component {
 
 
 //得到请求的路由路径----------------------------
-const selectKey = this.props.location.pathname
-const openKey = this.openKey
+let selectKey = this.props.location.pathname
+    //如果请求的路径是商品的子路由路径，selectKey置为商品的key
+    if (selectKey.indexOf('/product')===0) {
+      selectKey ='/product'
+    }
+    const openKey = this.openKey
     return (
       <div className='left-nav' to='/home'>
         <Link className='logo' to='./home'>

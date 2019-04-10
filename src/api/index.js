@@ -47,8 +47,28 @@ export const reqCategory = (categoryId)=>ajax('/manage/category/info',{categoryI
 
 
 
+//商品相关的
+
+//获取商品分页列表
+
+export const reqProducts =(pageNum,pageSize)=>ajax('/manage/product/list',{pageNum,pageSize})
+
+//搜索获取商品分页列表
+/*
+* SearchName:搜索的关键字
+* pageSize:每页的条目数
+* pageSNum：当前请求第几页面（从1开始）
+*
+* searchType：
+* */
+export const reqSearchProducts = ({pageSize, pageNum,searchType,searchName})=>ajax('/manage/product/search',{
+
+ pageSize,
+ pageNum,
+[searchType]:searchName
 
 
+})
 
 
 
